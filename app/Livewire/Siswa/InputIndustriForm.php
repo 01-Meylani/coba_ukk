@@ -23,8 +23,6 @@ class InputIndustriForm extends Component
     public $email;
 
 
-
-
     // Validasi form
     protected $rules = [
         'nama' => 'required|string|max:255',

@@ -72,9 +72,14 @@ class User extends Authenticatable
      * Mutator untuk memastikan setiap password baru di-hash sebelum disimpan.
      */
     public function setPasswordAttribute($value)
-    {
-        if (!empty($value)) {
+{
+    if (!empty($value)) {
+        // Cek apakah password sudah di-hash (bcrypt 60 karakter)
+        if (strlen($value) !== 60 || !preg_match('/^\$2y\$/', $value)) {
             $this->attributes['password'] = Hash::make($value);
+        } else {
+            $this->attributes['password'] = $value;
         }
     }
+}
 }

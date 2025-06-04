@@ -8,8 +8,9 @@ use App\Livewire\Siswa\DaftarIndustri;
 use App\Livewire\Siswa\InputIndustriForm;
 
 
+
 Route::get('/', function () {
-    return view('welcome');
+    return view('landing_page');
 });
 
 
