@@ -1,12 +1,6 @@
 <?php
 
-
-
-
 namespace App\Filament\Resources;
-
-
-
 
 use App\Filament\Resources\SiswaResource\Pages;
 use App\Filament\Resources\SiswaResource\RelationManagers;
@@ -21,14 +15,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\DB;
 
 
-
-
 class SiswaResource extends Resource
 {
     protected static ?string $model = Siswa::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-
 
 
     public static function form(Form $form): Form
@@ -63,16 +53,36 @@ class SiswaResource extends Resource
 
 
             Forms\Components\TextInput::make('kontak')
-                ->required()
-                ->tel()
-                ->maxLength(255),
+    ->required()
+    ->tel()
+    ->maxLength(255)
+    ->dehydrateStateUsing(function ($state) {
+        if (str_starts_with($state, '08')) {
+            return '+62' . substr($state, 1);
+        }
+        return $state;
+    })
+    ->formatStateUsing(function ($state) {
+        return $state; // Agar tidak mengubah tampilan saat diedit
+    }),
+
 
 
             Forms\Components\TextInput::make('email')
-                ->required()
-                ->email()
-                ->unique(ignoreRecord: true)
-                ->maxLength(255),
+    ->required()
+    ->email()
+    ->maxLength(255)
+    ->unique(ignoreRecord: true, table: 'siswas', column: 'email')
+    ->validationMessages([
+        'unique' => 'Email sudah digunakan.',
+    ])
+//untuk mengedit email akan otomatis terupdate dimenu user
+    ->afterStateUpdated(function ($state, $record) {
+        $oldEmail = $record->getOriginal('email');
+        if ($oldEmail !== $state) {
+            \App\Models\User::where('email', $oldEmail)->update(['email' => $state]);
+        }
+    }),
 
 
             Forms\Components\FileUpload::make('foto')
@@ -164,9 +174,11 @@ public static function table(Table $table): Table
                 ->label('Kontak'),
 
 
-            Tables\Columns\TextColumn::make('email')
-                ->label('Email')
-                ->searchable(),
+           Tables\Columns\TextColumn::make('kontak')
+    ->label('Kontak')
+    ->formatStateUsing(function ($state) {
+        return preg_replace('/^08/', '+628', $state);
+    }),
 
 
             Tables\Columns\ImageColumn::make('foto')

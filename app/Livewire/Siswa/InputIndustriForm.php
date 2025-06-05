@@ -6,13 +6,8 @@
 namespace App\Livewire\Siswa;
 
 
-
-
 use Livewire\Component;
 use App\Models\Industri;
-
-
-
 
 class InputIndustriForm extends Component
 {
@@ -30,7 +25,6 @@ class InputIndustriForm extends Component
         'alamat' => 'required|string|max:255',
         'kontak' => 'required|string|max:255',
         'email' => 'required|email|max:255',
-        'website' => 'required|website|max:255',
     ];
 
 
@@ -51,7 +45,6 @@ class InputIndustriForm extends Component
             'alamat' => $this->alamat,
             'kontak' => $this->kontak,
             'email' => $this->email,
-            'website' => $this->website,
         ]);
 
 
