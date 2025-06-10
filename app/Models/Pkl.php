@@ -52,18 +52,18 @@ class Pkl extends Model
     {
         return $this->belongsTo(Industri::class);
     }
-    protected static function booted()
-    {
-        static::saving(function ($pkl) {
-            if ($pkl->tanggal_mulai && $pkl->tanggal_selesai) {
-                $durasi = $pkl->tanggal_mulai->diffInDays($pkl->tanggal_selesai);
-
-
-                if ($durasi < 90) {
-                    throw new \Exception('Durasi PKL minimal harus 90 hari.');
-                }
+    protected static function booted() 
+{
+    static::saving(function ($pkl) {
+        if ($pkl->tanggal_mulai && $pkl->tanggal_selesai) {
+            $durasi = $pkl->tanggal_mulai->diffInDays($pkl->tanggal_selesai);
+            if ($durasi < 90) {
+                throw new \Exception('Durasi PKL minimal harus 90 hari.');
             }
-        });
-    }
+        }
+    });
 }
+
+    }
+
 
